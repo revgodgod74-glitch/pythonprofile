@@ -12,13 +12,19 @@ def get_db():
 def init_db():
     db = get_db()
     cur = db.cursor()
+    # Add new columns for guns.lol style features
     cur.execute("""
     CREATE TABLE IF NOT EXISTS users (
         username TEXT PRIMARY KEY,
         password TEXT,
         bio TEXT,
         links TEXT,
-        music TEXT
+        music TEXT,
+        photo TEXT DEFAULT '',
+        theme_color TEXT DEFAULT '#00aaff',
+        views INTEGER DEFAULT 0,
+        link2 TEXT DEFAULT '',
+        link3 TEXT DEFAULT ''
     )
     """)
     db.commit()
@@ -50,13 +56,18 @@ def register():
         db = get_db()
         cur = db.cursor()
         cur.execute(
-            "INSERT INTO users VALUES (?,?,?,?,?)",
+            "INSERT INTO users VALUES (?,?,?,?,?,?,?,?,?,?)",
             (
                 request.form["username"],
                 request.form["password"],
-                "",
-                "",
-                ""
+                "",  # bio
+                "",  # links
+                "",  # music
+                "",  # photo
+                "#00aaff",  # theme_color
+                0,   # views
+                "",  # link2
+                ""   # link3
             )
         )
         db.commit()
@@ -73,12 +84,16 @@ def dashboard():
 
     if request.method == "POST":
         cur.execute("""
-        UPDATE users SET bio=?, links=?, music=?
+        UPDATE users SET bio=?, links=?, link2=?, link3=?, music=?, photo=?, theme_color=?
         WHERE username=?
         """,(
             request.form.get("bio", ""),
             request.form.get("links", ""),
+            request.form.get("link2", ""),
+            request.form.get("link3", ""),
             request.form.get("music", ""),
+            request.form.get("photo", ""),
+            request.form.get("theme_color", "#00aaff"),
             session["user"]
         ))
         db.commit()
@@ -95,6 +110,11 @@ def profile(username):
     user = cur.fetchone()
     if not user:
         return "User not found"
+
+    # Increment view count
+    cur.execute("UPDATE users SET views = views + 1 WHERE username=?", (username,))
+    db.commit()
+
     return render_template("profile.html", user=user)
 
 # ---------- START ----------
