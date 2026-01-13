@@ -1,25 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{{ user[0] }} | Profile</title>
+  <title>@{{ user[0] }} | Profile</title>
   <link rel="stylesheet" href="/static/style.css">
   <style>
     body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: white;
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
 
-    .profile {
+    .profile-card {
       text-align: center;
-      background: rgba(0,170,255,0.15);
+      background: rgba(0,0,0,0.2);
       backdrop-filter: blur(14px);
       padding: 40px;
       border-radius: 20px;
-      width: 340px;
-      box-shadow: 0 0 40px rgba(0,170,255,0.3);
-      animation: fadeIn 1s ease;
+      width: 360px;
+      box-shadow: 0 0 40px {{ user[8] }};
+    }
+
+    .profile-card img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid {{ user[8] }};
+      margin-bottom: 20px;
     }
 
     h1 {
@@ -27,13 +40,13 @@
     }
 
     .bio {
-      opacity: 0.9;
       margin-bottom: 20px;
+      opacity: 0.9;
     }
 
     .link-btn {
       display: block;
-      background: #00aaff;
+      background: {{ user[8] }};
       color: black;
       padding: 12px;
       margin: 10px 0;
@@ -44,7 +57,7 @@
     }
 
     .link-btn:hover {
-      box-shadow: 0 0 15px #00aaff;
+      box-shadow: 0 0 15px {{ user[8] }};
       transform: scale(1.05);
     }
 
@@ -53,32 +66,29 @@
       font-style: italic;
       opacity: 0.8;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
   </style>
 </head>
 <body>
 
-<div class="profile">
+<div class="profile-card">
+
+  {% if user[5] %}
+    <img src="{{ user[5] }}" alt="Profile Photo">
+  {% endif %}
 
   <h1>@{{ user[0] }}</h1>
 
-  <div class="bio">
-    {{ user[2] }}
-  </div>
+  <div class="bio">{{ user[2] }}</div>
 
-  {% if user[3] %}
-    <a class="link-btn" href="{{ user[3] }}" target="_blank">
-      🔗 Visit my link
-    </a>
-  {% endif %}
+  {% for link in [user[3], user[6], user[7]] %}
+    {% if link %}
+      <a class="link-btn" href="{{ link }}" target="_blank">🔗 Visit Link</a>
+    {% endif %}
+  {% endfor %}
 
   {% if user[4] %}
     <div class="music">
-      🎵 Favourite Song: {{ user[4] }}
+      🎵 <a href="{{ user[4] }}" target="_blank">Favourite Song / Spotify</a>
     </div>
   {% endif %}
 
