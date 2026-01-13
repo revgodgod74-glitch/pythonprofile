@@ -76,9 +76,9 @@ def dashboard():
         UPDATE users SET bio=?, links=?, music=?
         WHERE username=?
         """,(
-            request.form["bio"],
-            request.form["links"],
-            request.form["music"],
+            request.form.get("bio", ""),
+            request.form.get("links", ""),
+            request.form.get("music", ""),
             session["user"]
         ))
         db.commit()
