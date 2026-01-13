@@ -5,31 +5,80 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+
+<!-- PARTICLE CANVAS -->
 <canvas id="particles"></canvas>
 
-<h2>Dashboard</h2>
+<!-- CONTENT -->
+<div class="content">
 
-<form method="POST">
+  <h2>Dashboard</h2>
 
-  <label>Your Bio</label><br>
-  <textarea name="bio" placeholder="Your bio">{{ user[2] }}</textarea>
-  <br><br>
+  <form method="POST">
 
-  <label>Your Links</label><br>
-  <input type="text" name="links" placeholder="Your links" value="{{ user[3] }}">
-  <br><br>
+    <label>Your Bio</label><br>
+    <textarea name="bio" placeholder="Your bio">{{ user[2] }}</textarea>
+    <br><br>
 
-  <label>Your Favourite Song</label><br>
-  <input type="text" name="music" placeholder="Song name or Spotify link" value="{{ user[4] }}">
-  <br><br>
+    <label>Your Links</label><br>
+    <input type="text" name="links" placeholder="Your links" value="{{ user[3] }}">
+    <br><br>
 
-  <button type="submit">Save</button>
+    <label>Your Favourite Song</label><br>
+    <input type="text" name="music" placeholder="Song name or Spotify link" value="{{ user[4] }}">
+    <br><br>
 
-</form>
+    <button type="submit">Save</button>
 
-<br>
+  </form>
 
-<p>Your profile: <a href="/{{ user[0] }}">Open</a></p>
+  <br>
+
+  <p>Your profile: <a href="/{{ user[0] }}">Open</a></p>
+
+</div>
+
+<!-- PARTICLE SCRIPT -->
+<script>
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for (let i = 0; i < 120; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2 + 1,
+    dx: (Math.random() - 0.5),
+    dy: (Math.random() - 0.5)
+  });
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#00aaff";
+
+  particles.forEach(p => {
+    p.x += p.dx;
+    p.y += p.dy;
+
+    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.r + p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
 
 </body>
 </html>
