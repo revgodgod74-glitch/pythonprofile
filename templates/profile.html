@@ -1,98 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>@{{ user[0] }} | Profile</title>
+  <title>@{{ user[0] }}</title>
   <link rel="stylesheet" href="/static/style.css">
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #000;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
+    body { margin:0; font-family:sans-serif; overflow:hidden; background:#000; color:white; }
+    canvas { position:fixed; top:0; left:0; z-index:-1; }
     .profile-card {
-      text-align: center;
-      background: rgba(0,0,0,0.2);
-      backdrop-filter: blur(14px);
-      padding: 40px;
-      border-radius: 20px;
-      width: 360px;
-      box-shadow: 0 0 40px {{ user[8] }};
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      background:rgba(0,0,0,0.7); padding:30px; border-radius:15px; width:320px;
+      box-shadow:0 0 40px {{ user[8] }};
+      text-align:center;
     }
-
-    .profile-card img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid {{ user[8] }};
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      margin-bottom: 10px;
-    }
-
-    .bio {
-      margin-bottom: 20px;
-      opacity: 0.9;
-    }
-
-    .link-btn {
-      display: block;
-      background: {{ user[8] }};
-      color: black;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    .link-btn:hover {
-      box-shadow: 0 0 15px {{ user[8] }};
-      transform: scale(1.05);
-    }
-
-    .music {
-      margin-top: 20px;
-      font-style: italic;
-      opacity: 0.8;
-    }
+    .profile-card img { width:100px; height:100px; border-radius:50%; margin-bottom:15px; }
+    .link-btn { display:block; margin:5px 0; padding:8px; background:{{ user[8] }}; color:black; text-decoration:none; border-radius:8px; }
+    iframe { margin-top:15px; border-radius:10px; }
   </style>
 </head>
 <body>
 
+<canvas id="particles"></canvas>
+
 <div class="profile-card">
-
-  {% if user[5] %}
-    <img src="{{ user[5] }}" alt="Profile Photo">
-  {% endif %}
-
+  {% if user[5] %}<img src="{{ user[5] }}" alt="Profile Photo">{% endif %}
   <h1>@{{ user[0] }}</h1>
-
   <div class="bio">{{ user[2] }}</div>
 
   {% for link in [user[3], user[6], user[7]] %}
-    {% if link %}
-      <a class="link-btn" href="{{ link }}" target="_blank">🔗 Visit Link</a>
-    {% endif %}
+    {% if link %}<a href="{{ link }}" target="_blank" class="link-btn">{{ link }}</a>{% endif %}
   {% endfor %}
 
   {% if user[4] %}
-    <div class="music">
-      🎵 <a href="{{ user[4] }}" target="_blank">Favourite Song / Spotify</a>
-    </div>
+    <iframe src="https://open.spotify.com/embed/track/{{ user[4].split('/')[-1] }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
   {% endif %}
-
 </div>
+
+<script>
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+let particles = [];
+for(let i=0;i<120;i++){
+  particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*2+1, dx:(Math.random()-0.5), dy:(Math.random()-0.5)});
+}
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="{{ user[8] }}";
+  particles.forEach(p=>{
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
 
 </body>
 </html>
