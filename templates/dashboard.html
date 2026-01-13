@@ -16,20 +16,28 @@
 
   <form method="POST">
 
+    <label>Profile Photo URL</label><br>
+    <input type="text" name="photo" placeholder="Profile image URL" value="{{ user[5] }}"><br><br>
+
     <label>Your Bio</label><br>
-    <textarea name="bio" placeholder="Your bio">{{ user[2] }}</textarea>
-    <br><br>
+    <textarea name="bio" placeholder="Your bio">{{ user[2] }}</textarea><br><br>
 
-    <label>Your Links</label><br>
-    <input type="text" name="links" placeholder="Your links" value="{{ user[3] }}">
-    <br><br>
+    <label>Link 1</label><br>
+    <input type="text" name="links" placeholder="Link 1" value="{{ user[3] }}"><br><br>
 
-    <label>Your Favourite Song</label><br>
-    <input type="text" name="music" placeholder="Song name or Spotify link" value="{{ user[4] }}">
-    <br><br>
+    <label>Link 2</label><br>
+    <input type="text" name="link2" placeholder="Link 2" value="{{ user[6] }}"><br><br>
+
+    <label>Link 3</label><br>
+    <input type="text" name="link3" placeholder="Link 3" value="{{ user[7] }}"><br><br>
+
+    <label>Your Favourite Song / Spotify URL</label><br>
+    <input type="text" name="music" placeholder="Song or Spotify link" value="{{ user[4] }}"><br><br>
+
+    <label>Theme Color</label><br>
+    <input type="color" name="theme_color" value="{{ user[8] }}"><br><br>
 
     <button type="submit">Save</button>
-
   </form>
 
   <br>
