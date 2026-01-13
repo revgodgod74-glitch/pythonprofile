@@ -3,88 +3,57 @@
 <head>
   <title>Dashboard</title>
   <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body { margin:0; font-family:sans-serif; overflow:hidden; }
+    canvas { position:fixed; top:0; left:0; z-index:-1; }
+    .content {
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      background:rgba(0,0,0,0.6); padding:30px; border-radius:15px; width:300px;
+      color:white; box-shadow:0 0 40px #00aaff;
+    }
+    input, textarea, button { width:100%; margin-top:10px; padding:10px; border-radius:8px; border:none; }
+    button { background:#00aaff; color:black; cursor:pointer; }
+  </style>
 </head>
 <body>
 
-<!-- PARTICLE CANVAS -->
 <canvas id="particles"></canvas>
 
-<!-- CONTENT -->
 <div class="content">
-
   <h2>Dashboard</h2>
-
   <form method="POST">
-
-    <label>Profile Photo URL</label><br>
-    <input type="text" name="photo" placeholder="Profile image URL" value="{{ user[5] }}"><br><br>
-
-    <label>Your Bio</label><br>
-    <textarea name="bio" placeholder="Your bio">{{ user[2] }}</textarea><br><br>
-
-    <label>Link 1</label><br>
-    <input type="text" name="links" placeholder="Link 1" value="{{ user[3] }}"><br><br>
-
-    <label>Link 2</label><br>
-    <input type="text" name="link2" placeholder="Link 2" value="{{ user[6] }}"><br><br>
-
-    <label>Link 3</label><br>
-    <input type="text" name="link3" placeholder="Link 3" value="{{ user[7] }}"><br><br>
-
-    <label>Your Favourite Song / Spotify URL</label><br>
-    <input type="text" name="music" placeholder="Song or Spotify link" value="{{ user[4] }}"><br><br>
-
-    <label>Theme Color</label><br>
-    <input type="color" name="theme_color" value="{{ user[8] }}"><br><br>
-
+    <input type="text" name="photo" placeholder="Profile Photo URL" value="{{ user[5] }}">
+    <textarea name="bio" placeholder="Your bio">{{ user[2] }}</textarea>
+    <input type="text" name="links" placeholder="Link 1" value="{{ user[3] }}">
+    <input type="text" name="link2" placeholder="Link 2" value="{{ user[6] }}">
+    <input type="text" name="link3" placeholder="Link 3" value="{{ user[7] }}">
+    <input type="text" name="music" placeholder="Favourite song / Spotify URL" value="{{ user[4] }}">
+    <input type="color" name="theme_color" value="{{ user[8] }}">
     <button type="submit">Save</button>
   </form>
-
   <br>
-
-  <p>Your profile: <a href="/{{ user[0] }}">Open</a></p>
-
+  <p>Your profile: <a href="/{{ user[0] }}" target="_blank">Open</a></p>
 </div>
 
-<!-- PARTICLE SCRIPT -->
 <script>
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 let particles = [];
-
-for (let i = 0; i < 120; i++) {
-  particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 2 + 1,
-    dx: (Math.random() - 0.5),
-    dy: (Math.random() - 0.5)
-  });
+for(let i=0;i<120;i++){
+  particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*2+1, dx:(Math.random()-0.5), dy:(Math.random()-0.5)});
 }
-
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#00aaff";
-
-  particles.forEach(p => {
-    p.x += p.dx;
-    p.y += p.dy;
-
-    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.r + p.y, p.r, 0, Math.PI * 2);
-    ctx.fill();
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#00aaff";
+  particles.forEach(p=>{
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
   });
-
   requestAnimationFrame(animate);
 }
-
 animate();
 </script>
 
