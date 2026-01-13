@@ -1,13 +1,30 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
-import os  # <- add this for environment variable
+import os
 
 app = Flask(__name__)
 app.secret_key = "secret123"
 
+# ---------- DATABASE ----------
 def get_db():
     return sqlite3.connect("database.db")
 
+def init_db():
+    db = get_db()
+    cur = db.cursor()
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        username TEXT PRIMARY KEY,
+        password TEXT,
+        bio TEXT,
+        links TEXT,
+        music TEXT
+    )
+    """)
+    db.commit()
+    db.close()
+
+# ---------- ROUTES ----------
 @app.route("/", methods=["GET","POST"])
 def login():
     if request.method == "POST":
@@ -16,7 +33,10 @@ def login():
 
         db = get_db()
         cur = db.cursor()
-        cur.execute("SELECT * FROM users WHERE username=? AND password=?", (user,pw))
+        cur.execute(
+            "SELECT * FROM users WHERE username=? AND password=?",
+            (user, pw)
+        )
         result = cur.fetchone()
 
         if result:
@@ -77,6 +97,8 @@ def profile(username):
         return "User not found"
     return render_template("profile.html", user=user)
 
-# ---- Render-friendly run ----
-port = int(os.environ.get("PORT", 5000))  # Render will set this
+# ---------- START ----------
+init_db()  # <<< YE SABSE IMPORTANT LINE
+
+port = int(os.environ.get("PORT", 5000))
 app.run(host="0.0.0.0", port=port, debug=True)
