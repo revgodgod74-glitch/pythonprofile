@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
+import os  # <- add this for environment variable
 
 app = Flask(__name__)
 app.secret_key = "secret123"
@@ -76,4 +77,6 @@ def profile(username):
         return "User not found"
     return render_template("profile.html", user=user)
 
-app.run(debug=True)
+# ---- Render-friendly run ----
+port = int(os.environ.get("PORT", 5000))  # Render will set this
+app.run(host="0.0.0.0", port=port, debug=True)
