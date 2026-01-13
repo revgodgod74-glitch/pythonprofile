@@ -1,14 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{{ user[0] }}</title>
+  <title>{{ user[0] }} | Profile</title>
   <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .profile {
+      text-align: center;
+      background: rgba(0,170,255,0.15);
+      backdrop-filter: blur(14px);
+      padding: 40px;
+      border-radius: 20px;
+      width: 340px;
+      box-shadow: 0 0 40px rgba(0,170,255,0.3);
+      animation: fadeIn 1s ease;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .bio {
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+
+    .link-btn {
+      display: block;
+      background: #00aaff;
+      color: black;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .link-btn:hover {
+      box-shadow: 0 0 15px #00aaff;
+      transform: scale(1.05);
+    }
+
+    .music {
+      margin-top: 20px;
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
 </head>
 <body>
 
-<h1>@{{ user[0] }}</h1>
-<p>{{ user[2] }}</p>
-<p>{{ user[3] }}</p>
+<div class="profile">
+
+  <h1>@{{ user[0] }}</h1>
+
+  <div class="bio">
+    {{ user[2] }}
+  </div>
+
+  {% if user[3] %}
+    <a class="link-btn" href="{{ user[3] }}" target="_blank">
+      🔗 Visit my link
+    </a>
+  {% endif %}
+
+  {% if user[4] %}
+    <div class="music">
+      🎵 Favourite Song: {{ user[4] }}
+    </div>
+  {% endif %}
+
+</div>
 
 </body>
 </html>
