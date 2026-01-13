@@ -9,10 +9,24 @@
 <h2>Dashboard</h2>
 
 <form method="POST">
-  <textarea name="bio" placeholder="Your bio"></textarea><br><br>
-  <input type="text" name="links" placeholder="Your links"><br><br>
+
+  <label>Your Bio</label><br>
+  <textarea name="bio" placeholder="Your bio">{{ user[2] }}</textarea>
+  <br><br>
+
+  <label>Your Links</label><br>
+  <input type="text" name="links" placeholder="Your links" value="{{ user[3] }}">
+  <br><br>
+
+  <label>Your Favourite Song</label><br>
+  <input type="text" name="music" placeholder="Song name or Spotify link" value="{{ user[4] }}">
+  <br><br>
+
   <button type="submit">Save</button>
+
 </form>
+
+<br>
 
 <p>Your profile: <a href="/{{ user[0] }}">Open</a></p>
 
